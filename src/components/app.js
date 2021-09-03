@@ -6,28 +6,43 @@ import Header from './header';
 
 class Main extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.isLogged = this.isLogged.bind(this);
+        this.state = {
+            isLoggedIn: localStorage.getItem('token'),
+
+        }
+    }
+
+    isLogged(param) {
+        this.setState({
+            isLoggedIn: param
+        })
+    }
+
     render() {
         const privateR = private_routes.map(
-            ({ path, Component }) => <Route exact path={path}> <Component /> </Route>);
+            ({ path, Component }) => <Route exact path={path}> <Component isLoggedIn={this.isLogged} /> </Route>);
         const publicR = public_routes.map(
-            ({ path, Component }) => <Route exact path={path}><Component /></Route>);
+            ({ path, Component }) => <Route exact path={path}> <Component isLoggedIn={this.isLogged} /></Route>);
 
         return (
             <div>
 
                 <Router>
-                    <Header />
-                    <div className='content'>
+                    <Header isLogged={this.isLogged} isLoggedIn={this.state.isLoggedIn} />
+                    <div id='content'>
                         <Switch>
-                        {
-                            publicR
-                        }
-                        {
-                            localStorage.getItem('token') ? privateR : <Redirect to="/" />
-                        }
-                    </Switch> 
+                            {
+                                publicR
+                            }
+                            {
+                                this.state.isLoggedIn ? privateR : <Redirect to="/" />
+                            }
+                        </Switch>
                     </div>
-                   
+
                 </Router>
 
 

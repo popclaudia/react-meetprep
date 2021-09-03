@@ -15,14 +15,16 @@ a {
     margin: 5px;
 }
 
-.content {
+#content {
     padding: 100px;
     margin: 0 auto;
     height: 100%;
+    background-color: white;
     max-width: 1200px;
 }
 
-#login-form {
+#login-form,
+#register-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -56,4 +58,28 @@ button {
 
 button:hover {
     cursor: pointer;
+}
+
+.invalidCredentials,
+.error {
+    color: rgb(214, 5, 5);
+    font-size: 18px;
+    font-weight: bold;
+}
+
+table,
+tr,
+th,
+td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px 20px;
+}
+
+th {
+    background-color: rgb(229, 231, 252);
+}
+
+table {
+    margin: 30px auto;
 }
