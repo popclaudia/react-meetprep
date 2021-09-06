@@ -1,5 +1,5 @@
 import React from 'react';
-import { getContacts } from './service/apiCalls';
+import { getContacts } from '../service/apiCalls';
 
 
 class Contacts extends React.Component {
@@ -22,7 +22,6 @@ class Contacts extends React.Component {
             this.setState({
                 contacts: response.data.items,
             });
-            // this.renderContacts();
         });
     }
 
@@ -45,7 +44,6 @@ class Contacts extends React.Component {
                 </tr>
 
             )
-            // this.createContact(, , )
         });
         return items;
 

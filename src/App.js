@@ -1,4 +1,3 @@
-import { Router, Switch } from 'react-router';
 import './App.css';
 import Main from './components/app';
 

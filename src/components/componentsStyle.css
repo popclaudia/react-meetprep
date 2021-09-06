@@ -40,8 +40,12 @@ a {
 input,
 button {
     padding: 10px;
-    margin: 10px 0 40px 0;
+    margin: 10px 0;
     border-radius: 10px;
+}
+
+label {
+    margin-top: 30px;
 }
 
 button {
@@ -53,7 +57,7 @@ button {
     font-weight: bold;
     margin-top: 70px;
     font-size: 18px;
-    margin: 0 auto;
+    margin: 40px auto;
 }
 
 button:hover {
@@ -82,4 +86,10 @@ th {
 
 table {
     margin: 30px auto;
+}
+
+.errorMessage {
+    color: rgb(238, 0, 0);
+    text-align: start;
+    padding: 0 5px;
 }

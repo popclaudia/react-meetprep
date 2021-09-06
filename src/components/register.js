@@ -1,15 +1,25 @@
+import { Form, Formik, Field, ErrorMessage } from 'formik';
 import React from 'react';
 import { Redirect } from 'react-router';
-import { register } from './service/apiCalls';
+import { register } from '../service/apiCalls';
+import * as Yup from 'yup';
 
 class Register extends React.Component {
 
     constructor(props) {
         super(props);
-        this.handleRegister = this.handleRegister.bind(this)
         this.state = {
             isRegistered: false,
             errorMessage: null,
+            newUser: {
+                firstName: null,
+                lastName: null,
+                email: null,
+                password: null,
+                linkedIn: null,
+                preferredIndustries: '',
+                attendingReasons: '',
+            },
         }
     }
 
@@ -17,35 +27,33 @@ class Register extends React.Component {
         document.getElementById('content').style.backgroundColor = 'rgba(0,0,0,0)';
     }
 
+    handleRegister = () => {
+        let attendingReasons = this.state.newUser.attendingReasons;
+        attendingReasons = attendingReasons.split(",");
 
-    handleRegister() {
-        let fn = document.getElementById('rfirst-name').value;
-        let ln = document.getElementById('rlast-name').value;
-        let li = document.getElementById('rlinkedIn').value;
-        let email = document.getElementById('remail').value;
-        let pass = document.getElementById('rpassword').value;
-        let ar = document.getElementById('rattending-reasons').value;
-        ar = ar.split(",");
-        let pi = document.getElementById('rpreferred-industries').value;
+        let prefferedIndustries = this.state.newUser.preferredIndustries;
         const pr_ind = {};
-        pi = pi.split(';')
-        pi.forEach(ind => {
+        prefferedIndustries = prefferedIndustries.split(';')
+        prefferedIndustries.forEach(ind => {
             let i = ind.split(':')
-            let t = i[1].split(',')
-            const ts = [];
-            t.forEach(topic => {
-                ts.push(parseInt(topic))
-            })
-            pr_ind[i[0]] = ts;
+            if (i.length > 1) {
+                let t = i[1].split(',')
+                const ts = [];
+                t.forEach(topic => {
+                    ts.push(parseInt(topic))
+                })
+                pr_ind[i[0]] = ts;
+            }
+
 
         })
         const requestData = {
-            last_name: ln,
-            first_name: fn,
-            email: email,
+            last_name: this.state.newUser.lastName,
+            first_name: this.state.newUser.firstName,
+            email: this.state.newUser.email,
             linkedin: false,
-            password: pass,
-            attending_reasons: ar,
+            password: this.state.newUser.password,
+            attending_reasons: attendingReasons,
             preferred_industries: pr_ind,
         }
         register(requestData, (result) => {
@@ -68,36 +76,99 @@ class Register extends React.Component {
 
     render() {
 
+        const SignupSchema = Yup.object().shape({
+            firstName: Yup.string()
+                .min(2, 'Too Short!')
+                .max(50, 'Too Long!'),
+            lastName: Yup.string()
+                .min(2, 'Too Short!')
+                .max(50, 'Too Long!')
+                .required('*Required'),
+            email: Yup.string().email('Invalid email').required('*Required'),
+            password: Yup.string()
+                .min(6, 'The password must be at least 6 characters')
+                .required('*Required'),
+            attendingReasons: Yup.string()
+                .trim()
+                .matches(/^\d+(,\d+)*$/, 'Format required: number, number, number...')
+                .required('*Required'),
+        });
+
         return (
             <div className='Home'>
-                <form id='register-form'>
-                    <h1>Register</h1>
-                    <label htmlFor="rfirst-name"><b>First Name*</b></label>
-                    <input type="text" placeholder="First Name" id="rfirst-name" required />
+                <Formik
+                    validationSchema={SignupSchema}>
 
-                    <label htmlFor="rlast-name"><b>Last Name*</b></label>
-                    <input type="text" placeholder="Last Name" id="rlast-name" required />
+                    <Form id='register-form'>
+                        <h1>Register</h1>
+                        <label htmlFor="first-name"><b>First Name</b></label>
+                        <Field name="firstName" type="text" placeholder="First Name"
+                            onChange={(event) => this.setState(prevState => {
+                                let newUser = { ...prevState.newUser };
+                                newUser.firstName = event.target.value;
+                                return { newUser };
+                            })} />
+                        <ErrorMessage name="firstName" component="div" className='errorMessage' />
 
-                    <label htmlFor="remail"><b>Email*</b></label>
-                    <input type="email" placeholder="email" id="remail" required />
+                        <label htmlFor="last-name"><b>Last Name</b></label>
+                        <Field name="lastName" type="text" placeholder="Last Name"
+                            onChange={(event) => this.setState(prevState => {
+                                let newUser = { ...prevState.newUser };
+                                newUser.lastName = event.target.value;
+                                return { newUser };
+                            })} />
+                        <ErrorMessage name="lastName" component="div" className='errorMessage' />
+
+                        <label htmlFor="email"><b>Email</b></label>
+                        <Field name="email" type="email" placeholder="email"
+                            onChange={(event) => this.setState(prevState => {
+                                let newUser = { ...prevState.newUser };
+                                newUser.email = event.target.value;
+                                return { newUser };
+                            })} />
+                        <ErrorMessage name="email" component="div" className='errorMessage' />
 
 
-                    <label htmlFor="rlinkedIn"><b>LinkedIn*</b></label>
-                    <input type="text" placeholder="LinkedIn" id="rlinkedIn" required />
+                        <label htmlFor="linkedIn"><b>LinkedIn</b></label>
+                        <Field type="text" placeholder="LinkedIn"
+                            onChange={(event) => this.setState(prevState => {
+                                let newUser = { ...prevState.newUser };
+                                newUser.linkedIn = event.target.value;
+                                return { newUser };
+                            })} required />
 
-                    <label htmlFor="rpassword"><b>Password*</b></label>
-                    <input type="password" placeholder="password" id="rpassword" required />
+                        <label htmlFor="password"><b>Password</b></label>
+                        <Field name='password' type="password" placeholder="password"
+                            onChange={(event) => this.setState(prevState => {
+                                let newUser = { ...prevState.newUser };
+                                newUser.password = event.target.value;
+                                return { newUser };
+                            })} />
+                        <ErrorMessage name="password" component="div" className='errorMessage' />
 
-                    <label htmlFor="rattending-reasons"><b>Attending Reasons*</b></label>
-                    <input type="text" placeholder="Ex: 3, 5, 7" id="rattending-reasons" required />
+                        <label htmlFor="attending-reasons"><b>Attending Reasons</b></label>
+                        <Field name='attendingReasons' type="text" placeholder="Ex: 3, 5, 7"
+                            onChange={(event) => this.setState(prevState => {
+                                let newUser = { ...prevState.newUser };
+                                newUser.attendingReasons = event.target.value;
+                                return { newUser };
+                            })} required />
+                        <ErrorMessage name="attendingReasons" component="div" className='errorMessage' />
 
-                    <label htmlFor="rpreferred-industries"><b>Preferred Industries*</b></label>
-                    <input type="text" placeholder="Ex: 1: 13; 3: 1, 5; 5: 2, 10" id="rpreferred-industries" required />
+                        <label htmlFor="preferred-industries"><b>Preferred Industries</b></label>
+                        <Field type="text" placeholder="Ex: 1: 13; 3: 1, 5; 5: 2, 10"
+                            onChange={(event) => this.setState(prevState => {
+                                let newUser = { ...prevState.newUser };
+                                newUser.preferredIndustries = event.target.value;
+                                return { newUser };
+                            })} required />
 
-                    <button type="button" onClick={this.handleRegister}>Register</button>
+                        <button type="button" onClick={this.handleRegister}>Register</button>
 
-                    <p class='error'>{this.state.errorMessage}</p>
-                </form>
+                        <p className='error'>{this.state.errorMessage}</p>
+                    </Form>
+                </Formik>
+
                 {
                     this.state.isRegistered &&
                     <Redirect to='/login'></Redirect>

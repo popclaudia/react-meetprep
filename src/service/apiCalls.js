@@ -1,4 +1,3 @@
-import axios from "axios";
 import { HOST } from "./host";
 
 export function login(email, password, callback) {
@@ -21,22 +20,6 @@ export function login(email, password, callback) {
         .catch(error => {
             console.log('Error: ' + error)
         })
-
-    // const URL = HOST.backend_api + '/login';
-    // const body = { email: email, password: password };
-    // const axiosConfig = {
-    //     headers: {
-    //         'security-token': 'test',
-    //     }
-    // };
-
-    // axios.post(URL, body, axiosConfig)
-    //     .then((response) => {
-    //         console.log(response)
-    //     })
-    //     .catch((error) => {
-    //         console.log(error)
-    //     })
 }
 
 export function logOut(callback) {

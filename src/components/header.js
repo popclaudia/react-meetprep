@@ -1,15 +1,14 @@
 import React from 'react';
 import { Link, Route } from 'react-router-dom';
 import './componentsStyle.css'
-import { logOut } from './service/apiCalls';
+import { logOut } from '../service/apiCalls';
 class Header extends React.Component {
 
     constructor(props) {
         super(props);
-        this.logOut = this.logOut.bind(this)
     }
 
-    logOut() {
+    logOut = () => {
         logOut((result) => {
             if (result) {
                 localStorage.clear();
