@@ -1,72 +1,60 @@
-import React from 'react';
-import { getContacts } from '../service/apiCalls';
+import React, { useState, useEffect } from 'react';
+import { CONTACTS } from '../service/endpoints';
 
 
-class Contacts extends React.Component {
+function Contacts() {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            contacts: null,
-        }
-    }
+    const [contacts, setContacts] = useState(null);
 
-    componentDidMount() {
-        document.getElementById('content').style.backgroundColor = 'white';
-        this.fetchContacts();
-    }
+    useEffect(() => {
+        fetch(
+            CONTACTS.GET_CONTACTS,
+            {
+                method: "GET",
+                headers: new Headers({
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Security-Token': 'test',
+                })
+            }
+        ).then(function (response) {
+            if (response.ok) {
+                response.json().then(json => setContacts(json.data.items));
+            } else {
+                response.json().then(() => setContacts(null));
+            }
+        })
+    }, []);
 
-    fetchContacts() {
-        getContacts((response) => {
-            console.log(response);
-            this.setState({
-                contacts: response.data.items,
-            });
-        });
-    }
 
-    createContact(fn, ln, email) {
 
-        return (
-            <p>{fn}</p>
-        )
-    }
-
-    renderContacts() {
-        const items = []
-
-        this.state.contacts.forEach(contact => {
-            items.push(
-                <tr>
-                    <td>{contact.first_name}</td>
-                    <td>{contact.last_name}</td>
-                    <td>{contact.email}</td>
-                </tr>
-
-            )
-        });
-        return items;
-
-    }
-
-    render() {
-
-        return (
-            <div className='contacts'>
-                <h1>Contacts</h1>
-                <table class='table'>
+    return (
+        <div className='contacts'>
+            <h1>Contacts</h1>
+            <table className='table'>
+                <thead>
                     <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th> Email</th>
                     </tr>
-                    {this.state.contacts && this.renderContacts()}
-                </table>
+                </thead>
 
-            </div>
-        );
-    }
+                <tbody>
+                    {
+                        contacts &&
+                        contacts.map((contact) =>
+                            <tr>
+                                <td>{contact.first_name}</td>
+                                <td>{contact.last_name}</td>
+                                <td>{contact.email}</td>
+                            </tr>
+                        )
+                    }
+                </tbody>
 
+            </table>
+        </div>
+    );
 }
 
 

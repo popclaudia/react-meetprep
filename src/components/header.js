@@ -4,10 +4,6 @@ import './componentsStyle.css'
 import { logOut } from '../service/apiCalls';
 class Header extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     logOut = () => {
         logOut((result) => {
             if (result) {
