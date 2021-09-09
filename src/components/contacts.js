@@ -9,12 +9,12 @@ function Contacts() {
 
     useEffect(() => {
         getContacts(null, (result) => {
-            if (!result.errors) {
+            if (result.status=='success') {
                 setContacts(result.data.items)
             }
         });
     }, []);
-
+ 
     return (
         <div className='contacts'>
             <h1>Contacts</h1>

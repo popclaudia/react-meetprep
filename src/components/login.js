@@ -17,7 +17,7 @@ function Login(props) {
 
         const body = {email: email, password: password};
         logIn(body, (result) => {
-            if (!result.errors) {
+            if (result.status=='success') {
                 props.isLoggedIn(true);
                 localStorage.setItem('user-data', JSON.stringify(result.data));
                 localStorage.setItem('token', result.data.authentication.access_token);

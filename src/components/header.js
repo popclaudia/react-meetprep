@@ -9,7 +9,7 @@ function Header(props) {
 
      const logout = () => {
         logOut(null, (result) => {
-            if (!result.errors) {
+            if (result.status=='success') {
                 localStorage.clear();
                 props.isLogged(false);
             }

@@ -49,7 +49,7 @@ function Register() {
             preferred_industries: pr_ind,
         }
         register(requestData, (result) => {
-            if (!result.errors) {
+            if (result.status=='success') {
                 setIsRegistered(true);
             }
             else {
