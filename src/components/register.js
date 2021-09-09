@@ -8,24 +8,14 @@ function Register() {
 
     const [isRegistered, setIsRegistered] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [newUser, setNewUser] = useState({
-        firstName: null,
-        lastName: null,
-        email: null,
-        password: null,
-        linkedIn: null,
-        preferredIndustries: '',
-        attendingReasons: '',
-    });
 
-    const {register} = useAPIRequester();
+    const { register } = useAPIRequester();
 
-
-    const handleRegister = () => {
-        let attendingReasons = newUser.attendingReasons;
+    const handleRegister = (user) => {
+        let attendingReasons = user.attendingReasons;
         attendingReasons = attendingReasons.split(",");
 
-        let prefferedIndustries = newUser.preferredIndustries;
+        let prefferedIndustries = user.preferredIndustries;
         const pr_ind = {};
         prefferedIndustries = prefferedIndustries.split(';')
         prefferedIndustries.forEach(ind => {
@@ -40,16 +30,16 @@ function Register() {
             }
         })
         const requestData = {
-            last_name: newUser.lastName,
-            first_name: newUser.firstName,
-            email: newUser.email,
+            last_name: user.lastName,
+            first_name: user.firstName,
+            email: user.email,
             linkedin: false,
-            password: newUser.password,
+            password: user.password,
             attending_reasons: attendingReasons,
             preferred_industries: pr_ind,
         }
         register(requestData, (result) => {
-            if (result.status=='success') {
+            if (result.status === 'success') {
                 setIsRegistered(true);
             }
             else {
@@ -81,65 +71,50 @@ function Register() {
     return (
         <div className='Home'>
             <Formik
-                validationSchema={SignupSchema}>
+                initialValues={{
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    linkedIn: '',
+                    password: '',
+                    attendingReasons: '',
+                    preferredIndustries: '',
+                }
+                }
+                validationSchema={SignupSchema}
+                onSubmit = {(values) => {
+                    handleRegister(values);
+                }}
+                >
                 <Form id='register-form'>
                     <h1>Register</h1>
-                    <label htmlFor="first-name"><b>First Name</b></label>
-                    <Field name="firstName" type="text" placeholder="First Name"
-                        onChange={(event) =>
-                            setNewUser({
-                                ...newUser,
-                                first_name: event.target.value,
-                            })} />
+                    <label htmlFor="firstName"><b>First Name</b></label>
+                    <Field name="firstName" type="text" placeholder="First Name"/>
                     <ErrorMessage name="firstName" component="div" className='errorMessage' />
 
-                    <label htmlFor="last-name"><b>Last Name</b></label>
-                    <Field name="lastName" type="text" placeholder="Last Name"
-                        onChange={(event) => setNewUser({
-                            ...newUser,
-                            last_name: event.target.value,
-                        })} />
+                    <label htmlFor="lastName"><b>Last Name</b></label>
+                    <Field name="lastName" type="text" placeholder="Last Name"/>
                     <ErrorMessage name="lastName" component="div" className='errorMessage' />
 
                     <label htmlFor="email"><b>Email</b></label>
-                    <Field name="email" type="email" placeholder="email"
-                        onChange={(event) => setNewUser({
-                            ...newUser,
-                            email: event.target.value,
-                        })} />
+                    <Field name="email" type="email" placeholder="email"/>
                     <ErrorMessage name="email" component="div" className='errorMessage' />
 
                     <label htmlFor="linkedIn"><b>LinkedIn</b></label>
-                    <Field type="text" placeholder="LinkedIn"
-                        onChange={(event) => setNewUser({
-                            ...newUser,
-                            linkedIn: event.target.value,
-                        })} />
+                    <Field type="text" name = "linkedIn" placeholder="LinkedIn" />
 
                     <label htmlFor="password"><b>Password</b></label>
-                    <Field name='password' type="password" placeholder="password"
-                        onChange={(event) => setNewUser({
-                            ...newUser,
-                            password: event.target.value,
-                        })} />
+                    <Field name='password' type="password" placeholder="password" />
                     <ErrorMessage name="password" component="div" className='errorMessage' />
 
-                    <label htmlFor="attending-reasons"><b>Attending Reasons</b></label>
-                    <Field name='attendingReasons' type="text" placeholder="Ex: 3, 5, 7"
-                        onChange={(event) => setNewUser({
-                            ...newUser,
-                            attending_reasons: event.target.value,
-                        })} />
+                    <label htmlFor="attendingReasons"><b>Attending Reasons</b></label>
+                    <Field name='attendingReasons' type="text" placeholder="Ex: 3, 5, 7"/>
                     <ErrorMessage name="attendingReasons" component="div" className='errorMessage' />
 
-                    <label htmlFor="preferred-industries"><b>Preferred Industries</b></label>
-                    <Field type="text" placeholder="Ex: 1: 13; 3: 1, 5; 5: 2, 10"
-                        onChange={(event) => setNewUser({
-                            ...newUser,
-                            preferred_industries: event.target.value,
-                        })} />
+                    <label htmlFor="preferredIndustries"><b>Preferred Industries</b></label>
+                    <Field type="text" name="preferredIndustries" placeholder="Ex: 1: 13; 3: 1, 5; 5: 2, 10" />
 
-                    <button type="button" onClick={handleRegister}>Register</button>
+                    <button type="submit">Register</button>
 
                     <p className='error'>{errorMessage}</p>
                 </Form>

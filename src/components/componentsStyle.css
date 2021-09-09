@@ -106,3 +106,8 @@ table {
     text-align: start;
     padding: 0 5px;
 }
+
+select {
+    padding: 5px;
+    border-radius: 5px;
+}

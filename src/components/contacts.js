@@ -1,22 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useAPIRequester } from '../service/apiRequester';
 
-function Contacts() {
+function Contacts(props) {
 
     const [contacts, setContacts] = useState(null);
 
-    const {getContacts} = useAPIRequester();
+    const { getContacts } = useAPIRequester();
 
     useEffect(() => {
         getContacts(null, (result) => {
-            if (result.status=='success') {
-                setContacts(result.data.items)
+            if (result.status === 'success') {
+                setContacts(result.data.items);
+                props.contacts(result.data.items);
             }
         });
     }, []);
- 
+
     return (
         <div className='contacts'>
+        <h3>Selected contact: {props.selectedContact}</h3>
             <h1>Contacts</h1>
             <table className='table'>
                 <thead>
