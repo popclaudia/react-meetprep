@@ -1,3 +1,3 @@
 export const HOST = {
-    backend_api: 'http://meetprep.beta.bitstone.eu/api/v1',
+    BASE_URL: 'http://meetprep.beta.bitstone.eu/api/v1',
 };

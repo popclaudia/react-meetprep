@@ -1,48 +1,41 @@
 import React from 'react';
 import { Link, Route } from 'react-router-dom';
-import './componentsStyle.css'
-import { logOut } from '../service/apiCalls';
-class Header extends React.Component {
+import './componentsStyle.css';
+import { useAPIRequester } from '../service/apiRequester';
 
-    logOut = () => {
-        logOut((result) => {
-            if (result) {
+function Header(props) {
+
+    const {logOut} = useAPIRequester();
+
+     const logout = () => {
+        logOut(null, (result) => {
+            if (!result.errors) {
                 localStorage.clear();
-                this.props.isLogged(false);
+                props.isLogged(false);
             }
-
         });
-
     }
 
-    render() {
-
-        return (
-            <div className='header'>
-                <h2>
-                    Header
-                </h2>
-                <div>
-                    {!(this.props.isLoggedIn) &&
-                        (<Link to="/login" > logIn </Link>)
-                    }
-                    {this.props.isLoggedIn &&
-                        <Link onClick={this.logOut} to="/" > logOut </Link>
-                    }
-                    <Route exact path={['/', '/login']}>
-                        <Link to="/register">
-                            Register
-                        </Link>
-                    </Route>
-
-                </div>
-
-
+    return (
+        <div className='header'>
+            <h2>
+                Header
+            </h2>
+            <div>
+                {!(props.isLoggedIn) &&
+                    (<Link to="/login" > logIn </Link>)
+                }
+                {props.isLoggedIn &&
+                    <Link onClick={logout} to="/" > logOut </Link>
+                }
+                <Route exact path={['/', '/login']}>
+                    <Link to="/register">
+                        Register
+                    </Link>
+                </Route>
             </div>
-        );
-    }
-
+        </div>
+    );
 }
-
 
 export default Header;

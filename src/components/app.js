@@ -11,7 +11,6 @@ class Main extends React.Component {
         this.isLogged = this.isLogged.bind(this);
         this.state = {
             isLoggedIn: localStorage.getItem('token'),
-
         }
     }
 
@@ -32,7 +31,7 @@ class Main extends React.Component {
 
                 <Router>
                     <Header isLogged={this.isLogged} isLoggedIn={this.state.isLoggedIn} />
-                    <div id='content'>
+                    <div id= {this.state.isLoggedIn ? 'private-content': 'public-content'}>
                         <Switch>
                             {
                                 publicR

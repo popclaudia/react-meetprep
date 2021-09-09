@@ -15,13 +15,18 @@ a {
     margin: 5px;
 }
 
-#content {
+#public-content {
     padding: 100px;
     margin: 0 auto;
     height: 100%;
-    @if localStorage.getItem('token') {
-        background-color: white;
-    }
+    max-width: 1200px;
+}
+
+#private-content {
+    padding: 100px;
+    margin: 0 auto;
+    background-color: white;
+    height: 100%;
     max-width: 1200px;
 }
 

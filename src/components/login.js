@@ -1,86 +1,72 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Redirect } from 'react-router';
-import { login } from '../service/apiCalls';
-import { Formik, Field, Form, ErrorMessage  } from "formik";
+import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+import { useAPIRequester } from '../service/apiRequester';
 
-class Login extends React.Component {
+function Login(props) {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            isWrong: false,
-            isLoggedIn: false,
-            email: null,
-            password: null,
+    const [isWrong, setIsWrong] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
 
-        }
-    }
+    const {logIn} = useAPIRequester();
 
-    componentDidMount() {
-        document.getElementById('content').style.backgroundColor = 'rgba(0,0,0,0)';
-    }
+    const handleLogin = () => {
 
-    handleLogin = () => {
-
-        login(this.state.email, this.state.password, (result) => {
-            if (result) {
-                this.props.isLoggedIn(true);
+        const body = {email: email, password: password};
+        logIn(body, (result) => {
+            if (!result.errors) {
+                props.isLoggedIn(true);
                 localStorage.setItem('user-data', JSON.stringify(result.data));
                 localStorage.setItem('token', result.data.authentication.access_token);
-                this.setState({
-                    isLoggedIn: true,
-                    isSorrect: true,
-                });
+                setIsLoggedIn(true);
             }
             else {
                 console.log('Errr')
-                this.setState({
-                    isWrong: true
-                })
-                console.log(this.state.isCorrect)
+                setIsWrong(true);
             }
         }
-
         );
     }
 
-    render() {
+    const LoginSchema = Yup.object().shape({
+        email: Yup.string().email('Invalid email').required('*Required'),
+    });
 
-        const LoginSchema = Yup.object().shape({
-            email: Yup.string().email('Invalid email').required('*Required'),
-          });
+    return (
+        <div>
+            <Formik
+                validationSchema={LoginSchema}>
+                <Form id="login-form">
+                    <h1>Login</h1>
 
-        return (
-            <div>
-                <Formik
-                    validationSchema = {LoginSchema}>
-                    <Form id="login-form">
-                        <h1>Login</h1>
-                        <label htmlFor="email"><b>Email</b></label>
-                        <Field type="email" hname="email" placeholder="email" id="email"
-                            onChange={(event) => this.setState({ email: event.target.value })}/>
-                        <ErrorMessage name="email" component="div" className='errorMessage' />
-                        <label htmlFor="password"><b>Password</b></label>
-                        <Field type="password" placeholder="password" id="password"
-                            onChange={(event) => this.setState({ password: event.target.value })}/>
+                    <label htmlFor="email"><b>Email</b></label>
+                    <Field type="email" name="email" placeholder="email"
+                        onChange={(event) => setEmail(event.target.value)} />
+                    <ErrorMessage name="email" component="div" className='errorMessage' />
 
-                        <button type="button" onClick={this.handleLogin}>Login</button>
-                        {
-                            this.state.isWrong &&
-                            <p className='invalidCredentials'> Wrong username or password! </p>
-                        }
-                        {
-                            this.state.isLoggedIn &&
-                            <Redirect to='contacts'></Redirect>
-                        }
-                    </Form>
+                    <label htmlFor="password"><b>Password</b></label>
+                    <Field type="password" name="password" placeholder="password"
+                        onChange={(event) => setPassword(event.target.value )} />
 
-                </Formik>
+                    <button type="button" onClick={handleLogin}>Login</button>
+                    {
+                        isWrong &&
+                        <p className='invalidCredentials'> Wrong username or password! </p>
+                    }
+                    {
+                        isLoggedIn &&
+                        <Redirect to='contacts'></Redirect>
+                    }
+                </Form>
 
-            </div>
-        );
-    }
+            </Formik>
+
+        </div>
+    );
+
 }
 
 

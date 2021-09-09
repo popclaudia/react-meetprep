@@ -1,31 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { CONTACTS } from '../service/endpoints';
-
+import { useAPIRequester } from '../service/apiRequester';
 
 function Contacts() {
 
     const [contacts, setContacts] = useState(null);
 
+    const {getContacts} = useAPIRequester();
+
     useEffect(() => {
-        fetch(
-            CONTACTS.GET_CONTACTS,
-            {
-                method: "GET",
-                headers: new Headers({
-                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-                    'Security-Token': 'test',
-                })
+        getContacts(null, (result) => {
+            if (!result.errors) {
+                setContacts(result.data.items)
             }
-        ).then(function (response) {
-            if (response.ok) {
-                response.json().then(json => setContacts(json.data.items));
-            } else {
-                response.json().then(() => setContacts(null));
-            }
-        })
+        });
     }, []);
-
-
 
     return (
         <div className='contacts'>
@@ -38,7 +26,6 @@ function Contacts() {
                         <th> Email</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     {
                         contacts &&
@@ -51,7 +38,6 @@ function Contacts() {
                         )
                     }
                 </tbody>
-
             </table>
         </div>
     );
