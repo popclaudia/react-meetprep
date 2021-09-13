@@ -1,11 +1,17 @@
 import './App.css';
 import Main from './components/app';
+import { Provider } from 'react-redux'
+import { createStore } from 'redux';
+import contactsReducer from './reducers';
 
 function App() {
+
+  const store = createStore(contactsReducer);
+
   return (
-    <div className="App">
-      <Main/>
-    </div>
+    <Provider store = {store}>
+      <Main />
+    </Provider>
   );
 }
 

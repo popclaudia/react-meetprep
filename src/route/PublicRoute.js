@@ -1,6 +1,6 @@
-import Home from "../components/home";
-import Login from "../components/login";
-import Register from "../components/register";
+import Home from "../components/Home";
+import Login from "../components/Login";
+import Register from "../components/Register";
 
 export const public_routes = [{
         path: '/',
