@@ -3,7 +3,7 @@ import { Link, Route } from 'react-router-dom';
 import './componentsStyle.css';
 import { useAPIRequester } from '../service/apiRequester';
 
-function Header({ contacts, actions,...props}) {
+function Header({ contacts, actions, ...props }) {
 
     const { logOut } = useAPIRequester();
 
@@ -22,10 +22,11 @@ function Header({ contacts, actions,...props}) {
                 Header
             </h2>
             <div>
+                <b>{props.name} </b>
                 {
                     props.isLoggedIn &&
                     <select name="contacts" id="contacts" onChange={(event) => actions.selectContact(event.target.value)}>
-                    <option value = 'none'>-</option>
+                        <option value='none'>-</option>
                         {
                             contacts &&
                             contacts.map((contact) =>

@@ -1,6 +1,7 @@
 import Home from "../components/Home";
 import Login from "../components/Login";
 import Register from "../components/Register";
+import LogInContainer from "../containers/LoginContainer";
 
 export const public_routes = [{
         path: '/',
@@ -8,7 +9,7 @@ export const public_routes = [{
     },
     {
         path: '/login',
-        Component: Login,
+        Component: LogInContainer,
     },
     {
         path: '/register',

@@ -3,6 +3,7 @@ import { TYPES } from "../actions";
 const initialState = {
     contacts: [],
     selected_contact: 'none',
+    user_name: '',
 }
 
 export default function contactsReducer(state = initialState, action) {
@@ -16,6 +17,11 @@ export default function contactsReducer(state = initialState, action) {
             return {
                 ...state,
                 selected_contact: action.payload,
+            }
+        case TYPES.LOGIN:
+            return {
+                ...state,
+                user_name: action.payload,
             }
         default:
             return state

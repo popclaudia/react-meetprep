@@ -6,6 +6,7 @@ import Header from '../components/Header'
 
 const mapStateToProps = (state) => ({
     contacts: state.contacts,
+    name: state.user_name,
 })
 
 const mapDispatchToProps = dispatch => ({

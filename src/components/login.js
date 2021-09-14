@@ -3,6 +3,7 @@ import { Redirect } from 'react-router';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 import { useAPIRequester } from '../service/apiRequester';
+import { logInUser } from '../thunk/thunkFunction';
 
 function Login(props) {
 
@@ -13,19 +14,32 @@ function Login(props) {
 
     const handleLogin = (email, password) => {
 
-        const body = { email: email, password: password };
-        logIn(body, (result) => {
-            if (result.status === 'success') {
-                props.isLoggedIn(true);
-                localStorage.setItem('user-data', JSON.stringify(result.data));
-                localStorage.setItem('token', result.data.authentication.access_token);
-                setIsLoggedIn(true);
-            }
-            else {
-                console.log('Errr')
-                setIsWrong(true);
-            }
-        });
+        // const body = { email: email, password: password };
+        // logIn(body, (result) => {
+        //     if (result.status === 'success') {
+        //         props.isLoggedIn(true);
+        //         localStorage.setItem('user-data', JSON.stringify(result.data));
+        //         localStorage.setItem('token', result.data.authentication.access_token);
+        //         setIsLoggedIn(true);
+        //     }
+        //     else {
+        //         console.log('Errr')
+        //         setIsWrong(true);
+        //     }
+        // });
+        props.logIn(email, password, (result) => {
+            console.log(result)
+                    if (result.status === 'success') {
+                            props.isLoggedIn(true);
+                            localStorage.setItem('user-data', JSON.stringify(result.data));
+                            localStorage.setItem('token', result.data.authentication.access_token);
+                            setIsLoggedIn(true);
+                        }
+                        else {
+                            console.log('Errr')
+                            setIsWrong(true);
+                        }
+        })
     }
 
     const LoginSchema = Yup.object().shape({
@@ -42,7 +56,7 @@ function Login(props) {
                 }}
                 validationSchema={LoginSchema}
                 onSubmit={(values) => {
-                    handleLogin(values.email, values.password );
+                    handleLogin(values.email, values.password);
                 }}
             >
                 <Form id="login-form">
