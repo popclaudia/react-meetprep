@@ -1,22 +1,26 @@
 import React, { useEffect } from 'react';
 import { useAPIRequester } from '../service/apiRequester';
 
-function Contacts({contacts, selectedContact, actions}) {
+import { getContacts } from '../actions'
 
-    const { getContacts } = useAPIRequester();
+function Contacts({ contacts, selectedContact, actions }) {
+
+    // const { getContacts } = useAPIRequester();
 
     useEffect(() => {
-        getContacts(null, (result) => {
-            if (result.status === 'success') {
-                console.log('Contacts')
-                actions.getContacts(result.data.items);
-            }
-        });
+        // getContacts(null, (result) => {
+        //     if (result.status === 'success') {
+        //         console.log('Contacts')
+        //         actions.SAVEContacts(result.data.items);
+        //     }
+        // });
+      actions.getContacts();
+
     }, []);
 
     return (
         <div className='contacts'>
-        <h3>Selected contact: {selectedContact}</h3>
+            <h3>Selected contact: {selectedContact}</h3>
             <h1>Contacts</h1>
             <table className='table'>
                 <thead>

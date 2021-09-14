@@ -7,7 +7,7 @@ const initialState = {
 
 export default function contactsReducer(state = initialState, action) {
     switch (action.type) {
-        case TYPES.GET_CONTACTS:
+        case TYPES.SAVE_CONTACTS:
             return {
                 ...state,
                 contacts: action.payload,
